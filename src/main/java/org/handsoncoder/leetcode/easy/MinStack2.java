@@ -2,7 +2,7 @@ package org.handsoncoder.leetcode.easy;
 
 import java.util.Stack;
 
-// Pat your back
+// Using Stack
 /**
  * @author 3694805
  *
