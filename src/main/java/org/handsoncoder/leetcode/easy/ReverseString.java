@@ -33,7 +33,8 @@ public class ReverseString {
 
 	// Bad
 	public static String reverseString2(String s) {
-		if (s.isEmpty()) return s; 
+		if (s.isEmpty())
+			return s;
 		StringBuffer strBuff = new StringBuffer();
 		for (int i = s.length() - 1; i >= 0; i--) {
 			strBuff.append(s.charAt(i));
@@ -41,9 +42,11 @@ public class ReverseString {
 		return strBuff.toString();
 
 	}
+
 	// Best
-	public static String reverseString(String s) {
-		if (s.isEmpty()) return s;
+	public static String reverseString3(String s) {
+		if (s.isEmpty())
+			return s;
 		char[] sArr = s.toCharArray();
 
 		for (int i = 0, j = s.length() - 1; i < j; i++, j--) {
@@ -52,6 +55,22 @@ public class ReverseString {
 			sArr[j] = temp;
 		}
 		return new String(sArr);
+	}
+
+	public static String reverseString(String s) {
+		int low = 0;
+		int high = s.length() - 1;
+		char[] arr = new char[s.length()];
+		while (low < high) {
+			arr[low] = s.charAt(high);
+			arr[high] = s.charAt(low);
+			low++;
+			high--;
+		}
+		if (low == high) {
+			arr[low] = s.charAt(low);
+		}
+		return new String(arr);
 	}
 
 	public static void main(String[] args) {

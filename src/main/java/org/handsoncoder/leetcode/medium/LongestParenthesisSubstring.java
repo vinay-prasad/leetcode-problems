@@ -38,8 +38,10 @@ public class LongestParenthesisSubstring {
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		
+		LongestParenthesisSubstring testObj = new LongestParenthesisSubstring();
+		System.out.println(testObj.longestValidParentheses("(()()(()"));
+		
 	}
 
 }

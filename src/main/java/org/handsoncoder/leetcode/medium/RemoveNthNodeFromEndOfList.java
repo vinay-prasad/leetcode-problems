@@ -18,7 +18,7 @@ package org.handsoncoder.leetcode.medium;
  * Could you do this in one pass?
  */
 public class RemoveNthNodeFromEndOfList {
-	public ListNode removeNthFromEnd(ListNode head, int n) {
+	public ListNode removeNthFromEnd1(ListNode head, int n) {
 		if (head == null) {
 			return null;
 		}
@@ -39,11 +39,35 @@ public class RemoveNthNodeFromEndOfList {
 				spCount++;
 			}
 		}
-		if (fpCount == 1 && spCount == 1 || (spCount - fpCount != n)) {
+		if (fpCount == 1 && spCount == 1 || (spCount - fpCount < n)) {
 			return dummy.next;
 		} else {
 			fp.next = fp.next.next;
 			return dummy;
+		}
+	}
+
+	public ListNode removeNthFromEnd(ListNode head, int n) {
+
+		ListNode fp = head;
+		ListNode sp = head;
+		int fpCount = 1, spCount = 1;
+		while (sp.next != null) {
+			if (spCount - fpCount >= n) {
+				sp = sp.next;
+				fp = fp.next;
+				fpCount++;
+				spCount++;
+			} else {
+				sp = sp.next;
+				spCount++;
+			}
+		}
+		if (spCount == n) {
+			return head.next;
+		} else {
+			fp.next = fp.next.next;
+			return head;
 		}
 	}
 
