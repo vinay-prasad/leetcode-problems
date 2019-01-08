@@ -1,7 +1,6 @@
 package org.handsoncoder.leetcode.medium;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -19,19 +18,17 @@ public class MergeIntervals {
 			}
 		});
 		int i = 0;
-		while (i < intervals.size() - 1) {
-			if (intervals.get(i).end > intervals.get(i + 1).start) {
-				result.add(new Interval(intervals.get(i).start,
-						intervals.get(i + 1).end > intervals.get(i).end ? intervals.get(i + 1).end
-								: intervals.get(i).end));
-				i = i + 2;
+		result.add(intervals.get(i++));
+		while (i < intervals.size()) {
+			if (result.get(result.size() - 1).end >= intervals.get(i).start) {
+				Interval last = result.remove(result.size() - 1);
+				result.add(new Interval(last.start, (intervals.get(i).end > last.end) ? intervals.get(i).end: last.end ));
+				i++;
 			} else {
 				result.add(intervals.get(i));
-				i = i + 1;
+				i++;
 			}
 		}
-		if (i < intervals.size())
-			result.add(intervals.get(intervals.size() - 1));
 		return result;
 	}
 
@@ -42,6 +39,8 @@ public class MergeIntervals {
 		input.add(new Interval(8, 10));
 		input.add(new Interval(15, 18));
 		MergeIntervals testObj = new MergeIntervals();
-		testObj.merge(input);
+		List<Interval> result = testObj.merge(input);
+
+		// [[1,4],[0,2],[3,5]]
 	}
 }
