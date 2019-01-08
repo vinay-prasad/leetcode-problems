@@ -65,6 +65,7 @@ public class IntegerToEnglishWords {
 
 	private String tens(int num) {
 		switch (num) {
+		
 		case 2:
 			return "Twenty";
 		case 3:
