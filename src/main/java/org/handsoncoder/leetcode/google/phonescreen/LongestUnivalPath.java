@@ -28,4 +28,20 @@ public class LongestUnivalPath {
 		max = Math.max(max, (left + right));
 		return Math.max(left, right);
 	}
+	
+	public static void main(String[] args) {
+		LongestUnivalPath testObj = new LongestUnivalPath();
+		TreeNode root = new TreeNode(5);
+		root.left = new TreeNode(4);
+		root.left.left = new TreeNode(1);
+		root.left.right = new TreeNode(1);
+		root.right = new TreeNode(5);
+		root.right.right = new TreeNode(5);
+		
+		int result = testObj.longestUnivaluePath(root );
+		System.out.println(result);
+		
+		
+	}
+	
 }
