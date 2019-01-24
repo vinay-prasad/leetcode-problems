@@ -181,6 +181,46 @@ public class Practice {
 		return stack.isEmpty();
 	}
 
+	/**
+	 * 15. 3Sum [Amazon] -
+	 * 
+	 * @param nums
+	 * @return
+	 */
+	public List<List<Integer>> threeSum(int[] nums) {
+
+		List<List<Integer>> res = new ArrayList<>();
+		Arrays.sort(nums);
+		for (int i = 0; i < nums.length; i++) {
+			int left = i + 1, right = nums.length - 1;
+			while (left < right) {
+				if (nums[i] + nums[left] + nums[right] > 0) {
+					right--;
+				} else if (nums[i] + nums[left] + nums[right] < 0) {
+					left++;
+				} else {
+					res.add(Arrays.asList(nums[i], nums[left], nums[right]));
+					while ((left < right) && (nums[left] == nums[left + 1]))
+						left++;
+					while ((left < right) && (nums[right] == nums[right + 1]))
+						right--;
+					left++;
+				}
+			}
+		}
+		return res;
+	}
+	
+	/**
+	 * 17. Letter Combinations of a Phone Number
+	 * @param digits
+	 * @return
+	 */
+	public List<String> letterCombinations(String digits) {
+		return null;
+        
+    }
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
