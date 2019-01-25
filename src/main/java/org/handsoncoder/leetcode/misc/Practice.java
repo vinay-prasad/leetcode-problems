@@ -1,13 +1,6 @@
 package org.handsoncoder.leetcode.misc;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.*;
 
 import org.handsoncoder.leetcode.google.phonescreen.TreeNode;
 
@@ -579,8 +572,232 @@ public class Practice {
 
 	}
 
+	/**
+	 * 204. Count Primes [Amazon] - Have two for loops do the job using an
+	 * additional boolean array. Notice both the for loop starts with 2
+	 * 
+	 * @param n
+	 * @return
+	 */
+	public int countPrimes(int n) {
+		boolean[] arr = new boolean[n + 1];
+		int count = 0;
+
+		for (int i = 2; i < n; i++) {
+			if (!arr[i])
+				count++;
+			for (int j = 2; i * j < n; j++) {
+				arr[i * j] = true;
+			}
+		}
+		return count;
+	}
+
+	/**
+	 * 206. Reverse Linked List [Amazon] - Trick is TCP (Temp, Current, Previous)
+	 * nodes. Notice we iterate till curr points to null and return previous
+	 * 
+	 * @param head
+	 * @return
+	 */
+	public ListNode reverseList(ListNode head) {
+		ListNode curr = head, prev = null, temp = null;
+		while (curr != null) {
+			temp = curr.next;
+			curr.next = prev;
+			prev = curr;
+			curr = temp;
+		}
+		return prev;
+	}
+
+	/**
+	 * 215. Kth Largest Element in an Array [Amazon] - Priority Queue. Notice we add
+	 * to the queue first and then look if size exceeds k then pop the value
+	 * 
+	 * @param nums
+	 * @param k
+	 * @return
+	 */
+	public int findKthLargest(int[] nums, int k) {
+		Queue<Integer> q = new PriorityQueue<Integer>(new Comparator<Integer>() {
+
+			@Override
+			public int compare(Integer o1, Integer o2) {
+				return o1.compareTo(o2);
+			}
+		});
+		for (int n : nums) {
+			q.add(n);
+			if (q.size() > k)
+				q.poll();
+		}
+		return q.poll();
+	}
+
+	/**
+	 * 242. Valid Anagram [Amazon, Google] - classic int[] as charMap
+	 * 
+	 * @param s
+	 * @param t
+	 * @return
+	 */
+	public boolean isAnagram(String s, String t) {
+		if (s == null ^ t == null)
+			return false;
+		else if (s == null && t == null)
+			return true;
+		else if (s.length() != t.length())
+			return false;
+
+		int[] chars = new int[256];
+		for (char c : s.toCharArray()) {
+			chars[c]++;
+		}
+
+		for (char c : t.toCharArray()) {
+			if (--chars[c] < 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 387. First Unique Character in a String [Amazon] - Classic int[] charmap
+	 * problem
+	 * 
+	 * @param s
+	 * @return
+	 */
+	public int firstUniqChar(String s) {
+		if (s == null || s.length() == 0)
+			return -1;
+		int[] chars = new int[256];
+		for (int i = 0; i < s.length(); i++)
+			chars[s.charAt(i)]++;
+		for (int i = 0; i < s.length(); i++) {
+			if (chars[s.charAt(i)] == 1)
+				return i;
+		}
+		return -1;
+	}
+
+	/**
+	 * 238. Product of Array Except Self [Amazon, Favorite] - Trick is to keep
+	 * multiplying the array elements will previous elements accumulative mul from
+	 * both sides. Notice variable mul starts with 1
+	 * 
+	 * @param nums
+	 * @return
+	 */
+	public int[] productExceptSelf(int[] nums) {
+		int[] res = new int[nums.length];
+		for (int i = 0, mul = 1; i < nums.length; i++) {
+			res[i] = mul;
+			mul *= nums[i];
+		}
+		for (int i = nums.length - 1, mul = 1; i >= 0; i--) {
+			res[i] *= mul;
+			mul *= nums[i];
+		}
+		return nums;
+	}
+
+	/**
+	 * 771. Jewels and Stones [Amazon] - Typical HashSet problem
+	 * 
+	 * @param J
+	 * @param S
+	 * @return
+	 */
+	public int numJewelsInStones(String J, String S) {
+		int count = 0;
+		Set<Character> jewels = new HashSet<>();
+		for (char c : J.toCharArray())
+			jewels.add(c);
+		for (char c : S.toCharArray()) {
+			if (jewels.contains(c))
+				count++;
+		}
+		return count;
+	}
+
+	/**
+	 * 617. Merge Two Binary Trees [Amazon] - BFS solution. Bit slow but easy to
+	 * understand. Look other solution using recursion.
+	 * 
+	 * @param t1
+	 * @param t2
+	 * @return
+	 */
+	public TreeNode mergeTrees(TreeNode t1, TreeNode t2) {
+		if (t1 == null)
+			return t2;
+		if (t2 == null)
+			return t1;
+		TreeNode res = new TreeNode(0);
+		TreeNode dummy = res;
+		Queue<TreeNode> q = new LinkedList<>();
+		q.add(t1);
+		q.add(t2);
+		q.add(dummy);
+		while (!q.isEmpty()) {
+			TreeNode nodeT1 = q.poll();
+			TreeNode nodeT2 = q.poll();
+			TreeNode curr = q.poll();
+			curr.val = nodeT1.val + nodeT2.val;
+			if (nodeT1.left != null || nodeT2.left != null) {
+				curr.left = new TreeNode(0);
+				q.add(nodeT1.left != null ? nodeT1.left : new TreeNode(0));
+				q.add(nodeT2.left != null ? nodeT2.left : new TreeNode(0));
+				q.add(curr.left);
+
+			}
+			if (nodeT1.right != null || nodeT2.right != null) {
+				curr.right = new TreeNode(0);
+				q.add(nodeT1.right != null ? nodeT1.right : new TreeNode(0));
+				q.add(nodeT2.right != null ? nodeT2.right : new TreeNode(0));
+				q.add(curr.right);
+			}
+		}
+		return res;
+	}
+
+	public static TreeNode mergeTrees1(TreeNode t1, TreeNode t2) {
+		if (t1 == null)
+			return t2;
+		if (t2 == null)
+			return t1;
+		t1.val += t2.val;
+		t1.left = mergeTrees1(t1.left, t2.left);
+		t1.right = mergeTrees1(t1.right, t2.right);
+		return t1;
+	}
+
+	/**
+	 * 746. Min Cost Climbing Stairs [Amazon] - Solution using prev and prevPrev var
+	 * initialized with cost[1] and cost[0]. In every iteration calculate current
+	 * cost and swap variables. Notice curr cost and prev-prevPrev swapping
+	 * 
+	 * @param cost
+	 * @return
+	 */
+	public int minCostClimbingStairs(int[] cost) {
+		int prevPrev = cost[0];
+		int prev = cost[1];
+
+		for (int i = 2; i < cost.length; i++) {
+			int curr = cost[i] + Math.min(prev, prevPrev);
+			prevPrev = prev;
+			prev = curr;
+		}
+		return Math.min(prevPrev, prev);
+	}
+
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		Practice testObj = new Practice();
+		testObj.productExceptSelf(new int[] { 1, 2, 3, 4 });
 
 	}
 
