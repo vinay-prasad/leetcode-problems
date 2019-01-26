@@ -795,6 +795,129 @@ public class Practice {
 		return Math.min(prevPrev, prev);
 	}
 
+	/**
+	 * 53. Maximum Subarray [Favorite] - Classic Kadane's algorithm
+	 * 
+	 * @param nums
+	 * @return
+	 */
+	public int maxSubArray(int[] nums) {
+		if (nums == null || nums.length == 0)
+			return 0;
+		int leh = nums[0], lsf = nums[0];
+		for (int i = 1; i < nums.length; i++) {
+			leh = Math.max(nums[i], leh + nums[i]);
+			lsf = Math.max(lsf, leh);
+		}
+		return lsf;
+	}
+
+	/**
+	 * 128. Longest Consecutive Sequence [Favorite] -
+	 * 
+	 * @param nums
+	 * @return
+	 */
+	public int longestConsecutive(int[] nums) {
+		if (nums == null || nums.length == 0)
+			return 0;
+		Set<Integer> set = new HashSet<>();
+		int max = 0;
+		for (int num : nums)
+			set.add(num);
+		for (int num : nums) {
+			if (set.contains(num - 1))
+				continue;
+			else {
+				int cur = 0;
+				while (set.remove(num++)) {
+					max = Math.max(max, ++cur);
+				}
+			}
+		}
+		return max;
+	}
+
+	/**
+	 * 300. Longest Increasing Subsequence [Favorite] - This is O(nLogn) solution
+	 * using Arrays.binary search. Notice Arrays.binarSearch() method takes new
+	 * array we created not the actual array.
+	 * 
+	 * @param nums
+	 * @return
+	 */
+	public int lengthOfLIS(int[] nums) {
+		if (nums == null || nums.length == 0)
+			return 0;
+		int len = 0;
+		int[] arr = new int[nums.length];
+
+		for (int i = 0; i < nums.length; i++) {
+			int bsIndex = Arrays.binarySearch(arr, 0, len, nums[i]);
+			if (bsIndex < 0) {
+				bsIndex = -(bsIndex + 1);
+			}
+			arr[bsIndex] = nums[i];
+			if (len == bsIndex) {
+				len++;
+			}
+		}
+		return len;
+	}
+
+	/**
+	 * 325. Maximum Size Subarray Sum Equals k [Favorite] - Trick is to use a map
+	 * containing cumulative sum and index. Notice we put the sum and index in map
+	 * only if it already does not exist
+	 * 
+	 * @param nums
+	 * @param k
+	 * @return
+	 */
+	public int maxSubArrayLen(int[] nums, int k) {
+		Map<Integer, Integer> map = new HashMap<>();
+		int sum = 0, max = 0;
+		for (int i = 0; i < nums.length; i++) {
+			sum += nums[i];
+			if (sum == k) {
+				max = Math.max(max, i + 1);
+			} else if (map.containsKey(sum - k)) {
+				max = Math.max(max, i - map.get(sum - k));
+			}
+
+			if (map.containsKey(sum)) {
+				map.put(sum, i);
+			}
+		}
+		return max;
+	}
+
+	/**
+	 * 340. Longest Substring with At Most K Distinct Characters [Favorite] - Classic two pointer problem
+	 * Classic two pointers solution
+	 * 
+	 * @param s
+	 * @param k
+	 * @return
+	 */
+	public int lengthOfLongestSubstringKDistinct(String s, int k) {
+		int[] chars = new int[256];
+		int left = 0, right = 0, distinct = 0, max = 0;
+		while (right < s.length()) {
+			if (++chars[s.charAt(right)] == 1)
+				distinct++;
+			if (distinct > k) {
+				while(distinct != k) {
+					if (--chars[s.charAt(left++)] == 0) distinct--;
+				}
+			}else {
+				max = Math.max(max, right-left+1);
+			}
+			right++;
+		}
+		return max;
+	}
+
 	public static void main(String[] args) {
 		Practice testObj = new Practice();
 		testObj.productExceptSelf(new int[] { 1, 2, 3, 4 });
