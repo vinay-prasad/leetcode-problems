@@ -422,7 +422,7 @@ public class Practice {
 
 	/**
 	 * 160. Intersection of Two Linked Lists [Amazon] - Trick is to move the next
-	 * pointers of both nodes and append NodeA to NodeB and NodeB to NodeA. Look ar
+	 * pointers of both nodes and append NodeA to NodeB and NodeB to NodeA. Look at
 	 * the shorter version of the same solution
 	 * 
 	 * @param headA
@@ -885,7 +885,7 @@ public class Practice {
 				max = Math.max(max, i - map.get(sum - k));
 			}
 
-			if (map.containsKey(sum)) {
+			if (!map.containsKey(sum)) {
 				map.put(sum, i);
 			}
 		}
@@ -893,8 +893,8 @@ public class Practice {
 	}
 
 	/**
-	 * 340. Longest Substring with At Most K Distinct Characters [Favorite] - Classic two pointer problem
-	 * Classic two pointers solution
+	 * 340. Longest Substring with At Most K Distinct Characters [Favorite] -
+	 * Classic two pointer problem Classic two pointers solution
 	 * 
 	 * @param s
 	 * @param k
@@ -907,20 +907,611 @@ public class Practice {
 			if (++chars[s.charAt(right)] == 1)
 				distinct++;
 			if (distinct > k) {
-				while(distinct != k) {
-					if (--chars[s.charAt(left++)] == 0) distinct--;
+				while (distinct != k) {
+					if (--chars[s.charAt(left++)] == 0)
+						distinct--;
 				}
-			}else {
-				max = Math.max(max, right-left+1);
+			} else {
+				max = Math.max(max, right - left + 1);
 			}
 			right++;
 		}
 		return max;
 	}
 
+	/**
+	 * 54. Spiral Matrix [One Look Trick] - need to traverse matrix in left-right,
+	 * top-bottom, right-left, bottom-top fashion while updating top, right, left,
+	 * bottom. Notice the checks to break the loop and the position of top, left,
+	 * right, bottom in matrix[][]
+	 * 
+	 * @param matrix
+	 * @return
+	 */
+	public List<Integer> spiralOrder(int[][] matrix) {
+		List<Integer> list = new ArrayList<Integer>();
+		if (matrix != null && matrix.length > 0 && matrix[0].length > 0) {
+			int left = 0, top = 0, right = matrix[0].length - 1, bottom = matrix.length - 1;
+			while (list.size() != matrix.hashCode() * matrix[0].length) {
+				for (int i = left; i <= right; i++)
+					list.add(matrix[top][i]);
+				top++;
+				if (left > right || top > bottom)
+					break;
+				for (int i = top; i <= bottom; i++)
+					list.add(matrix[i][right]);
+				right--;
+				if (left > right || top > bottom)
+					break;
+				for (int i = right; i >= left; i--)
+					list.add(matrix[bottom][i]);
+				bottom--;
+				if (left > right || top > bottom)
+					break;
+				for (int i = bottom; i >= top; i--)
+					list.add(matrix[i][left]);
+				left++;
+				if (left > right || top > bottom)
+					break;
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * 129. Sum Root to Leaf Numbers [One Look Trick] - Root's value is being
+	 * assigned to children. Variable sum is being calculated based on child vs
+	 * no-child
+	 * 
+	 * @param root
+	 * @return
+	 */
+	public int sumNumbers(TreeNode root) {
+		int sum = 0;
+		if (root != null) {
+			if (root.left == null && root.right == null) {
+				sum = root.val;
+			} else {
+				int left = 0, right = 0;
+				if (root.left != null) {
+					root.left.val += root.val * 10;
+					left = sumNumbers(root.left);
+				}
+				if (root.right != null) {
+					root.right.val += root.val * 10;
+					right = sumNumbers(root.right);
+				}
+				sum = left + right;
+			}
+		}
+		return sum;
+	}
+
+	/**
+	 * 32. Longest Valid Parentheses [One Look Trick] - Trick is to traverse the
+	 * array from left to right and then left to right. Notice variables left and
+	 * right are being set to 0 at every for loop initialization.
+	 * 
+	 * @param s
+	 * @return
+	 */
+	public int longestValidParentheses(String s) {
+		int max = 0;
+		for (int i = 0, left = 0, right = 0; i < s.length(); i++) {
+			if (s.charAt(i) == '(')
+				left++;
+			else
+				right++;
+			if (left == right)
+				max = Math.max(max, left * 2);
+			if (right > left) {
+				left = 0;
+				right = 0;
+			}
+		}
+		for (int i = s.length() - 1, left = 0, right = 0; i >= 0; i--) {
+			if (s.charAt(i) == '(')
+				left++;
+			else
+				right++;
+			if (left == right)
+				max = Math.max(max, left * 2);
+			if (left > right) {
+				left = 0;
+				right = 0;
+			}
+		}
+		return max;
+	}
+
+	/**
+	 * 36. Valid Sudoku [One Look Trick] - each index is unique by three things row
+	 * (r), col(c), block (r/3, c/3)
+	 * 
+	 * @param board
+	 * @return
+	 */
+	public boolean isValidSudoku(char[][] board) {
+		Set<String> set = new HashSet<>();
+		for (int r = 0; r < board.length; r++) {
+			for (int c = 0; c < board[0].length; c++) {
+				StringBuffer sbr = new StringBuffer();
+				StringBuffer sbc = new StringBuffer();
+				StringBuffer sbb = new StringBuffer();
+				if (board[r][c] != '.' && (!set.add(sbr.append(board[r][c]).append("r").append(r).toString())
+						|| !set.add(sbc.append(board[r][c]).append("c").append(c).toString())
+						|| !set.add(sbb.append(board[r][c]).append("b").append(r / 3).append(c / 3).toString()))) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 394. Decode String [TODO, One Look Trick] - Trick is to iterate the string
+	 * and look every char for four cases 1. an 'integer' 2. opening bracket '[' 3.
+	 * closing bracket ']' 4. chars between '[abc]'. Use two stacks one for count
+	 * <Integer> and second for results<String>
+	 * 
+	 * @param s
+	 * @return
+	 */
+	public String decodeString(String s) {
+		return s;
+
+	}
+
+	/**
+	 * 909. Snakes and Ladders [TODO, BFS, Revisit]
+	 * 
+	 * @param board
+	 * @return
+	 */
+	public int snakesAndLadders(int[][] board) {
+		return 0;
+
+	}
+
+	/**
+	 * 412. Fizz Buzz [One Look Trick] - have two int variables fizz and buzz and
+	 * increment them on every iteration
+	 * 
+	 * @param n
+	 * @return
+	 */
+	public List<String> fizzBuzz(int n) {
+		List<String> res = new ArrayList<>();
+		for (int i = 1, fizz = 1, buzz = 1; i <= n; i++, fizz++, buzz++) {
+			if (fizz % 3 == 0 && buzz % 5 == 0) {
+				res.add("FizzBuzz");
+			} else if (fizz % 3 == 0) {
+				res.add("Fizz");
+			} else if (buzz % 5 == 0) {
+				res.add("Buzz");
+			} else {
+				res.add(i + "");
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * 94. Binary Tree In-order Traversal [] - Classic recursion approach. Also note
+	 * in-order traversal of a BST is sorted
+	 * 
+	 * @param root
+	 * @return
+	 */
+	public List<Integer> inorderTraversal(TreeNode root) {
+		List<Integer> res = new ArrayList<Integer>();
+		inOrderT(root, res);
+		return res;
+	}
+
+	private void inOrderT(TreeNode root, List<Integer> res) {
+		if (root != null) {
+			if (root.left != null)
+				inOrderT(root.left, res);
+			res.add(root.val);
+			if (root.right != null)
+				inOrderT(root.right, res);
+		}
+	}
+
+	/**
+	 * 144. Binary Tree Preorder Traversal [] -
+	 * 
+	 * @param root
+	 * @return
+	 */
+	public List<Integer> preorderTraversal(TreeNode root) {
+		List<Integer> res = new ArrayList<Integer>();
+		preOrderT(root, res);
+		return res;
+	}
+
+	private void preOrderT(TreeNode root, List<Integer> res) {
+		if (root != null) {
+			res.add(root.val);
+			if (root.left != null)
+				preOrderT(root.left, res);
+			if (root.right != null)
+				preOrderT(root.right, res);
+		}
+	}
+
+	/**
+	 * 145. Binary Tree Postorder Traversal [] -
+	 * 
+	 * @param root
+	 * @return
+	 */
+	public List<Integer> postorderTraversal(TreeNode root) {
+		List<Integer> res = new ArrayList<Integer>();
+		postOrderT(root, res);
+		return res;
+	}
+
+	private void postOrderT(TreeNode root, List<Integer> res) {
+		if (root != null) {
+			if (root.left != null)
+				postOrderT(root.left, res);
+			if (root.right != null)
+				postOrderT(root.right, res);
+			res.add(root.val);
+		}
+	}
+
+	/**
+	 * 98. Validate Binary Search Tree []
+	 * 
+	 * @param root
+	 * @return
+	 */
+	public boolean isValidBST(TreeNode root) {
+		List<Integer> list = new ArrayList<>();
+		return helperValidBST(root, list);
+	}
+
+	private boolean helperValidBST(TreeNode root, List<Integer> list) {
+		if (root != null) {
+			if (root.left != null && !helperValidBST(root.left, list))
+				return false;
+			if (list.size() == 0 || (list.get(list.size() - 1) < root.val)) {
+				list.add(root.val);
+			} else {
+				return false;
+			}
+			if (root.right != null && !helperValidBST(root.right, list))
+				return false;
+		}
+		return true;
+	}
+
+	/**
+	 * 101. Symmetric Tree [BFS] -
+	 * 
+	 * @param root
+	 * @return
+	 */
+	public boolean isSymmetric(TreeNode root) {
+		Queue<TreeNode> q = new LinkedList<TreeNode>();
+		q.add(root);
+		q.add(root);
+		while (!q.isEmpty()) {
+			TreeNode n1 = q.poll();
+			TreeNode n2 = q.poll();
+			if (n1 == null && n2 == null)
+				continue;
+			if (n1 == null ^ n2 == null)
+				return false;
+			if (n1.val != n2.val)
+				return false;
+			q.add(n1.left);
+			q.add(n2.right);
+			q.add(n1.right);
+			q.add(n2.left);
+		}
+		return true;
+	}
+
+	/**
+	 * 103. Binary Tree Zigzag Level Order Traversal [BFS] - Notice null is being
+	 * used to track level and ArrayList.add(0,x) is used for zig zag. Also make
+	 * sure that children are added in queue only when they exist
+	 * 
+	 * @param root
+	 * @return
+	 */
+	public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+		List<List<Integer>> res = new ArrayList<List<Integer>>();
+		if (root != null) {
+			int level = 0;
+			Queue<TreeNode> q = new LinkedList<TreeNode>();
+			q.add(root);
+			q.add(null);
+			while (!q.isEmpty()) {
+				TreeNode node = q.poll();
+				if (node != null) {
+					if (res.size() != level + 1)
+						res.add(new ArrayList<Integer>());
+					if (level % 2 == 0)
+						res.get(level).add(node.val);
+					else
+						res.get(level).add(0, node.val);
+					if (node.left != null)
+						q.add(node.left);
+					if (node.right != null)
+						q.add(node.right);
+				} else {
+					level++;
+					if (!q.isEmpty())
+						q.add(null);
+				}
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * 104. Maximum Depth of Binary Tree [] -
+	 * 
+	 * @param root
+	 * @return
+	 */
+	public int maxDepth(TreeNode root) {
+		int depth = 0;
+		if (root != null) {
+			Queue<TreeNode> q = new LinkedList<TreeNode>();
+			q.add(root);
+			q.add(null);
+			while (!q.isEmpty()) {
+				TreeNode node = q.poll();
+				if (node != null) {
+					if (node.left != null && node.right != null) {
+						q.add(node.left);
+						q.add(node.right);
+					} else if (node.left != null ^ node.right != null) {
+						q.add(node.left == null ? node.right : node.left);
+					}
+
+				} else {
+					depth++;
+					if (!q.isEmpty()) {
+						q.add(null);
+					}
+				}
+			}
+		}
+		return depth;
+	}
+
+	/**
+	 * 230. Kth Smallest Element in a BST [] -
+	 * 
+	 * @param root
+	 * @param k
+	 * @return
+	 */
+	public int kthSmallest(TreeNode root, int k) {
+		List<Integer> list = new ArrayList<Integer>();
+		inOrderKthSmallest(root, list, k);
+		return list.get(k - 1);
+	}
+
+	private void inOrderKthSmallest(TreeNode root, List<Integer> list, int k) {
+		if (root != null && list.size() != k) {
+			inOrderKthSmallest(root.left, list, k);
+			list.add(root.val);
+			inOrderKthSmallest(root.right, list, k);
+		}
+	}
+
+	/**
+	 * 285. Inorder Successor in BST [revisit] - try on paper. If root.val is
+	 * greater, assign res and go left else go right
+	 * 
+	 * @param root
+	 * @param p
+	 * @return
+	 */
+	public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
+		TreeNode res = null;
+		while (root != null) {
+			if (root.val > p.val) {
+				res = root;
+				root = root.left;
+			} else {
+				root = root.right;
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * 286. Walls and Gate [BFS] - Notice the Queue contains elements of type int[]
+	 * so that we can have access to row,column access. Try to give meaningful names
+	 * to variables
+	 * 
+	 * @param rooms
+	 */
+	public void wallsAndGates(int[][] rooms) {
+		int GATE = 0;
+		int SPACE = Integer.MAX_VALUE;
+		Queue<int[]> q = new LinkedList<int[]>();
+		List<int[]> DIRECTIONS = Arrays.asList(new int[] { 1, 0 }, new int[] { -1, 0 }, new int[] { 0, 1 },
+				new int[] { 0, -1 });
+		for (int r = 0; r < rooms.length; r++) {
+			for (int c = 0; c < rooms[0].length; c++) {
+				if (rooms[r][c] == GATE)
+					q.add(new int[] { r, c });
+			}
+		}
+		while (!q.isEmpty()) {
+			int[] arr = q.poll();
+			for (int[] dir : DIRECTIONS) {
+				int r = arr[0] + dir[0];
+				int c = arr[1] + dir[1];
+				if (r >= 0 && r < rooms.length && c >= 0 && c < rooms[0].length && rooms[r][c] == SPACE) {
+					rooms[r][c] = rooms[arr[0]][arr[1]] + 1;
+					q.add(new int[] { r, c });
+				}
+			}
+		}
+	}
+
+	/**
+	 * 449. Serialize and Deserialize BST [Amazon, Revisit] - Preorder for
+	 * serialization and a helper method to find median. Notice getMedian() method
+	 * 
+	 * @param root
+	 * @return
+	 */
+	public String serialize(TreeNode root) {
+		StringBuffer sb = new StringBuffer();
+		preOrderSerialize(root, sb);
+		return sb.toString().trim();
+	}
+
+	private void preOrderSerialize(TreeNode root, StringBuffer sb) {
+		if (root != null) {
+			sb.append(root.val + " ");
+			if (root.left != null)
+				preOrderSerialize(root.left, sb);
+			if (root.right != null)
+				preOrderSerialize(root.right, sb);
+		}
+	}
+
+	// Decodes your encoded data to tree.
+	public TreeNode deserialize(String data) {
+		if (data == null || data.length() == 0)
+			return null;
+		int[] arr = getArrayFromString(data);
+		return helperDeserialization(arr, 0, arr.length - 1);
+	}
+
+	private TreeNode helperDeserialization(int[] arr, int low, int high) {
+		if (low >= 0 && low <= high) {
+			TreeNode node = new TreeNode(arr[low]);
+			int div = getMedian(arr, node.val, low + 1, high);
+			node.left = helperDeserialization(arr, low + 1, div - 1);
+			node.right = helperDeserialization(arr, div, high);
+			return node;
+		} else {
+			return null;
+		}
+	}
+
+	private int getMedian(int[] arr, int val, int start, int end) {
+		int i;
+		for (i = start; i <= end; i++) {
+			if (val < arr[i]) {
+				return i;
+			}
+		}
+		return i;
+	}
+
+	private int[] getArrayFromString(String data) {
+		String[] sArr = data.split(" ");
+		int[] arr = new int[sArr.length];
+		for (int i = 0; i < sArr.length; i++) {
+			arr[i] = Integer.parseInt(sArr[i]);
+		}
+		return arr;
+	}
+
+	/**
+	 * 657. Robot Return to Origin [One Look Trick] - U==D R==L
+	 * 
+	 * @param moves
+	 * @return
+	 */
+	public boolean judgeCircle(String moves) {
+		int u = 0;
+		int l = 0;
+		for (char c : moves.toCharArray()) {
+			if (c == 'U')
+				u++;
+			if (c == 'D')
+				u--;
+			if (c == 'L')
+				l++;
+			if (c == 'R')
+				l--;
+		}
+		return u == 0 && l == 0;
+	}
+
+	/**
+	 * 687. Longest Univalue Path [] -
+	 * 
+	 * @param root
+	 * @return
+	 */
+	int maxLUP = 0;
+
+	public int longestUnivaluePath(TreeNode root) {
+		dfsLUP(root);
+		return maxLUP;
+	}
+
+	private int dfsLUP(TreeNode root) {
+		if (root != null) {
+			int left = dfsLUP(root.left);
+			int right = dfsLUP(root.right);
+			if (root.left != null && root.val == root.left.val) {
+				left++;
+			} else
+				left = 0;
+			if (root.right != null && root.val == root.right.val) {
+				right++;
+			} else
+				right = 0;
+			maxLUP = Math.max(maxLUP, left + right);
+			return Math.max(left, right);
+		}
+		return 0;
+	}
+
+	// Backtracking problems
+
+	/**
+	 * 91. Decode Ways [Backtracking, ]
+	 * 
+	 * @param s
+	 * @return
+	 */
+	public int numDecodings(String s) {
+		List<List<String>> list = new ArrayList<>();
+		List<String> tempList = new ArrayList<String>();
+		backtrack1(list, tempList, s, 0);
+		return list.size();
+	}
+
+	private void backtrack1(List<List<String>> list, List<String> tempList, String s, int start) {
+		if (s.length() == start) {
+			if (s.length() > 2) {
+				return;
+			}
+			if (s.startsWith("0") || Integer.parseInt(s) < 1 || Integer.parseInt(s) > 26) {
+				return;
+			}
+			list.add(new ArrayList<>(tempList));
+		} else {
+			for (int i = start; i < s.length(); i++) {
+				tempList.add(s.substring(start, i + 1));
+				backtrack1(list, tempList, s, i + 1);
+				tempList.remove(tempList.size() - 1);
+			}
+		}
+	}
+
 	public static void main(String[] args) {
 		Practice testObj = new Practice();
-		testObj.productExceptSelf(new int[] { 1, 2, 3, 4 });
+		testObj.longestValidParentheses("(()");
 
 	}
 

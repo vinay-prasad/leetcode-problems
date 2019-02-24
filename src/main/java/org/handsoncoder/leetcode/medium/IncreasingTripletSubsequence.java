@@ -22,7 +22,9 @@ public class IncreasingTripletSubsequence {
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		IncreasingTripletSubsequence testObj = new IncreasingTripletSubsequence();
+		boolean res = testObj.increasingTriplet(new int[] {100, 89, 99, 3, 4, 1});
+		System.out.println(res);
 
 	}
 
