@@ -7,7 +7,7 @@ public class EvenOddPattern {
 		if (num % 2 == 0) {
 			print = 0;
 			// In both for loops there is problem with scope of for loop need to add the
-			// parenthesis for correct results
+			// parenthesis for correct results // selection sort
 			for (i = 0; i < num; i++) // {
 				System.out.println(print + " ");
 			print += 2;
