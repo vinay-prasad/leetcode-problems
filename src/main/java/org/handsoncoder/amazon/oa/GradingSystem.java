@@ -13,7 +13,7 @@ public class GradingSystem {
 	public static char GradingSystem(int marks) {
 		if (marks <= 60)
 			return 'D';
-		// Use of logical operator || OR is wrong here we need to check for botht the
+		// Use of logical operator || OR is wrong here we need to check for both the
 		// boundary condition using && AND operator
 		// else if ((61 <= marks) || (marks <= 75))
 		else if ((61 <= marks) && (marks <= 75))
