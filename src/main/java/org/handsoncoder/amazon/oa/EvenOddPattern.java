@@ -1,5 +1,9 @@
 package org.handsoncoder.amazon.oa;
 
+/*
+ * #2
+ * For given integer "num" print first "num" odd numbers if "num" is odd or print first "num" even numbers if "num" is even
+ * */
 public class EvenOddPattern {
 
 	public static void printPattern(int num) {

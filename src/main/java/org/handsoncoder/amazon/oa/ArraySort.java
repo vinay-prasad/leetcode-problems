@@ -1,6 +1,10 @@
 package org.handsoncoder.amazon.oa;
 
 import java.util.Arrays;
+/*
+ * #1
+ * For given array "arr", sort it in descending order
+ * */
 
 public class ArraySort {
 
